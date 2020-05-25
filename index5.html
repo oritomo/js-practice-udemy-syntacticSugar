@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>糖衣構文の部類(Arrow/オブジェクトリテラル/関数のデフォルト引数)</title>
+</head>
+
+<body>
+  <script>
+    'use strict';
+    //----------------------------------------------------------
+    // const add = function(a,b){
+    //   return console.log(a + b);
+    // }
+    // add(1,2);
+
+    //const add = (a,b) => {
+    //  console.log(a + b);
+    //}
+
+    //評価が１つなら一行にできる
+    //この省略も出来るけど可読性が低くなるかも
+    const add = (a, b) => console.log(a + b);
+
+    add(1, 2);
+    //----------------------------------------------------------
+
+    // const double = function (number) {
+    //   console.log(2 * number);
+    // }
+    //double(4);
+
+    // const double = (number) => {
+    //   console.log(2 * number);
+    // }
+    // double(8);
+
+    //引数が１つの時だけ()も省略可
+    const double = number => console.log(2 * number);
+    double(8);
+    //-----------------------------------------------------------
+
+    const numbers = [1, 2, 3, 4];
+
+    // const box = numbers.map(function (number) {
+    //   return 2 * number;
+    // });
+
+    const box = numbers.map(number => 2 * number);
+    console.log(box)
+
+    //---------------------------------------------------------
+
+    //コールバック関数の中ではthisがいなくなりundifinedになる
+    // const team = {
+    //   members: ['こちょう','おばない','はなおか','まるお'],
+    //   teamName: 'スーパーチーム',
+    //   teamSummary: function(){
+    //     return this.members.map(function(member){
+    //       return console.log(`${member}は${this.teamName}です`)
+    //     });
+    //   }
+    // };
+    // team.teamSummary();
+
+    //アロー関数ならundifinedにならず、エラーにならない
+    const team = {
+      members: ['こちょう', 'おばない', 'とみおか', 'ひめじま'],
+      teamName: '鬼滅チーム',
+      teamSummary: function () {
+        return this.members.map(member => {
+          return console.log(`${member}は${this.teamName}です`)
+        });
+      }
+    };
+    team.teamSummary();
+
+    //-----------------------オブジェクトリテラル----------------------------
+
+    // function createBookShop(inventory) {
+    //   return {
+    //     inventory: inventory,
+    //     inventoryValue: function () {
+    //       return this.inventory.reduce((total, book) => total + book.price ,0) 
+    //     },
+    //     priceForTitle: function (title) {
+    //       return this.inventory.find(book => book.title === title).price;
+    //     }
+    //  }
+    // }
+    // const inventory = [
+    //   { title: 'ぜんまいざむらい', price: 500 },
+    //   { title: '鬼滅の刃', price: 500 },
+    //   { title: '最高の教科書', price: 3000 },
+    // ];
+    // const bookShop = createBookShop(inventory);
+    
+    // console.log(bookShop.inventoryValue());
+    // console.log(bookShop.priceForTitle('鬼滅の刃'))
+
+
+    function createBookShop(inventory) {
+      return {
+        inventory, //オブジェクトのキーとバリューが同じなら省略可
+        inventoryValue() { //オブジェクトのバリュー側がfuncならメソッドぽく書ける
+          return this.inventory.reduce((total, book) => total + book.price ,0) 
+        },
+        priceForTitle(title) {
+          return this.inventory.find(book => book.title === title).price;
+        }
+     }
+    }
+    const inventory = [
+      { title: 'ぜんまいざむらい', price: 500 },
+      { title: '鬼滅の刃', price: 500 },
+      { title: '最高の教科書', price: 3000 },
+    ];
+    const bookShop = createBookShop(inventory);
+
+    console.log(bookShop.inventoryValue());
+    console.log(bookShop.priceForTitle('鬼滅の刃'))
+
+    //--------------------------関数のデフォルト引数-------------------------
+
+    // function makeAjaxrequest(url,method){
+    //   if(!method){
+    //     method = 'GET';
+    //   }
+    //   //ajaxリクエストをするロジックがここにあると想定
+    //   return console.log(method)
+    // }
+    // makeAjaxrequest('google.com');
+    // makeAjaxrequest('google.com','POST');
+
+    function makeAjaxrequest(url,method = 'GET'){ //if分を書く必要なし
+     
+      //ajaxリクエストをするロジックがここにあると想定
+      return console.log(method)
+    }
+    makeAjaxrequest('google.com');
+    makeAjaxrequest('google.com','POST');
+
+    //-----------------------------------------------------------------------
+
+    function User(id){
+      this.id = id;
+    }
+
+    function generateId(){
+      return Math.floor(Math.random() * 1000);
+    }
+
+
+
+
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>
